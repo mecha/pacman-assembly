@@ -32,7 +32,7 @@ section .text
   .input:
     call handle_input
     cmp rax, 1
-    je .loop_end
+    je end_game
 
   .draw:
     call clr_scr
@@ -52,11 +52,12 @@ section .text
   .repeat:
     jmp .loop
 
-  .loop_end:
+  global end_game
+  end_game:
     call clr_scr
     call show_cursor
     call nrm_buf
-    ret
+    exit 0
 
   ;----------------------------------------------------------------------------
   ; void print_help()
