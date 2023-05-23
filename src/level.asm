@@ -19,6 +19,7 @@ section .text
   extern color_reset
   extern color_yellow
   extern color_blue
+  extern end_game
 
   ;----------------------------------------------------------------------------
   ; void load_level()
@@ -47,6 +48,7 @@ section .text
     mov r8, 1                                   ; x = 1
     mov r9, 2                                   ; y = 2
     xor r10, r10                                ; offset in level_buf, start at 0
+    mov qword [num_dots], 0                     ; num_dots = 0
   .loop_start:
   .move_cursor:
     push r8                                     ; save x (screen_pos overwrites these)
@@ -79,11 +81,13 @@ section .text
     xor r8, r8                                  ; x = 0
     jmp .loop_continue                          ; goto .loop_continue
   .print_dot:
+    inc qword [num_dots]                        ; num_dots++
     call color_yellow                           ; set color to yellow
     print STDOUT, dot_char, 4                   ; print dot
     call color_reset                            ; reset color
     jmp .loop_continue                          ; goto .loop_continue
   .print_power:
+    inc qword [num_dots]                        ; num_dots++
     print STDOUT, power_char, 4                 ; print power up
     jmp .loop_continue                          ; goto .loop_continue
   .print_wall:
@@ -111,7 +115,10 @@ section .text
     inc r10                                     ; offset++
     jmp .loop_start                             ; repeat
   .loop_end:
-    ret
+    mov rax, [num_dots]
+    cmp rax, 0                                  ; if num_dots == 0
+    jle end_game                                ;   goto end_game
+    ret                                         ; else return
 
   ;----------------------------------------------------------------------------
   ; void lvl_is_wall(u64 x, u64 y)
@@ -196,5 +203,7 @@ section .rodata
 section .data
   lvl_file_h dq 0
   lvl_dump_h dq 0
+
+  num_dots dq 0
 
   level_buf times LVL_BUF_LEN db 0
