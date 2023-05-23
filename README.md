@@ -11,7 +11,7 @@ I'd also like to apologize to the assembly warriors for my (probably) terrible a
 - [ ] Enemies
 - [ ] Lives
 - [ ] Lose condition
-- [ ] Win condition
+- [x] Win condition
 - [ ] Powerup & eat enemies
 - [ ] Fruit 🍒
 - [ ] Sounds, question mark?
