@@ -44,8 +44,8 @@ section .text
   ;----------------------------------------------------------------------------
   global print_level
   print_level:
-    mov r8, 1                                   ; x = 0
-    mov r9, 2                                   ; y = 0
+    mov r8, 1                                   ; x = 1
+    mov r9, 2                                   ; y = 2
     xor r10, r10                                ; offset in level_buf, start at 0
   .loop_start:
   .move_cursor:
