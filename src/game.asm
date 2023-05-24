@@ -2,77 +2,77 @@ BITS 64
 
 %include "macros.asm"
 
-section .text
-  extern STDOUT
-  extern usleep
-  extern load_level
-  extern print_level
-  extern handle_input
-  extern print_player
-  extern update_player
-  extern print_score
-  extern clr_scr
-  extern goto_pos
-  extern nrm_buf
-  extern alt_buf
-  extern show_cursor
-  extern hide_cursor
+extern STDOUT
+extern load_level
+extern alt_buf
+extern nrm_buf
+extern hide_cursor
+extern show_cursor
+extern clr_scr
+extern handle_input
+extern print_level
+extern print_player
+extern print_score
+extern update_player
+extern usleep
+extern goto_pos
 
-  ;----------------------------------------------------------------------------
-  ; void pacman()
-  ;----------------------------------------------------------------------------
-  global pacman
-  pacman:
-    call load_level
-    call alt_buf
-    call hide_cursor
+global pacman
+global end_game
+global print_help
 
-  .loop:
+SECTION .rodata
 
-  .input:
-    call handle_input
-    cmp rax, 1
-    je end_game
+help_txt db "Controls:", 10, " * Move: Up/Down/Left/Right", 10, " * Pause: p", 10, " * Exit: q"
+help_txt_len equ $ - help_txt
 
-  .draw:
-    call clr_scr
-    call print_level
-    call print_help
-    call print_player
-    call print_score
+SECTION .data
 
-  .update:
-    call update_player
+ftime dq 100
+score dq 0
+fcount dq 10
 
-  .delay:
-    push qword [ftime]
-    call usleep
-    add rsp, 8
+SECTION .text
+;----------------------------------------------------------------------------
+; void pacman()
+;----------------------------------------------------------------------------
+pacman:
+  call load_level
+  call alt_buf
+  call hide_cursor
+.loop:
+.input:
+  call handle_input
+  cmp rax, 1
+  je end_game
+.draw:
+  call clr_scr
+  call print_level
+  call print_help
+  call print_player
+  call print_score
+.update:
+  call update_player
+.delay:
+  push qword [ftime]
+  call usleep
+  add rsp, 8
+.repeat:
+  jmp .loop
 
-  .repeat:
-    jmp .loop
+;----------------------------------------------------------------------------
+; void end_game()
+;----------------------------------------------------------------------------
+end_game:
+  call clr_scr
+  call show_cursor
+  call nrm_buf
+  exit 0
 
-  global end_game
-  end_game:
-    call clr_scr
-    call show_cursor
-    call nrm_buf
-    exit 0
-
-  ;----------------------------------------------------------------------------
-  ; void print_help()
-  ;----------------------------------------------------------------------------
-  global print_help
-  print_help:
-    screen_pos 1, 33
-    print STDOUT, help_txt, help_txt_len
-    ret
-
-section .rodata
-  help_txt db "Controls:", 10, " * Move: Up/Down/Left/Right", 10, " * Pause: p", 10, " * Exit: q"
-  help_txt_len equ $ - help_txt
-
-section .data
-  ftime dq 100
-  fcount dq 10
-  score dq 0
+;----------------------------------------------------------------------------
+; void print_help()
+;----------------------------------------------------------------------------
+print_help:
+  screen_pos 1, 33
+  print STDOUT, help_txt, help_txt_len
+  ret
