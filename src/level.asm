@@ -152,9 +152,10 @@ print_level:
 ;----------------------------------------------------------------------------
 lvl_is_wall:
 .get_index:
-  mov rbx, rsp                                ; save rsp (since the push will change it)
-  push qword [rbx + 16]                       ; push y
-  push qword [rbx + 8]                        ; push x
+  push rbp                                    ; save old frame pointer
+  mov rbp, rsp                                ; set new frame pointer
+  push qword [rbp + 24]                       ; push y
+  push qword [rbp + 16]                        ; push x
   call lvl_ctoi                               ; lvl_ctoi(x, y)
   add rsp, 16                                 ; pop args
 .check_if_wall:
@@ -164,9 +165,11 @@ lvl_is_wall:
   jl .not_wall                                ;   goto .not_wall
 .is_wall:
   mov rax, 1                                  ; return 1 (wall)
-  ret
+  jmp .return
 .not_wall:
   mov rax, 0                                  ; return 0 (not wall)
+.return:
+  pop rbp                                     ; restore old frame pointer
   ret
 
 ;----------------------------------------------------------------------------
@@ -177,9 +180,10 @@ lvl_is_wall:
 ;   Returns 0 if nothing was consumed.
 ;----------------------------------------------------------------------------
 lvl_consume:
-  mov rbx, rsp                                ; save rsp (since the push will change it)
-  push qword [rbx + 16]                       ; push y
-  push qword [rbx + 8]                        ; push x
+  push rbp                                    ; save old frame pointer
+  mov rbp, rsp                                ; set new frame pointer
+  push qword [rbp + 24]                       ; push y
+  push qword [rbp + 16]                        ; push x
   call lvl_ctoi                               ; rax = lvl_ctoi(x, y)
   add rsp, 16                                 ; pop args
   xor rdx, rdx                                ; rdx = 0
@@ -192,12 +196,14 @@ lvl_consume:
   jmp .none                                   ; else goto .none
 .dot:                                         ; for dot:
   mov qword rax, 1                            ;   return 1
-  ret
+  jmp .return
 .power:                                       ; for power:
   mov qword rax, 2                            ;   return 2
-  ret
+  jmp .return
 .none:
   xor rax, rax                                ; return 0
+.return:
+  pop rbp                                     ; restore old frame pointer
   ret
 
 ;----------------------------------------------------------------------------
