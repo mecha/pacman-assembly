@@ -67,9 +67,8 @@ load_level:
   exit 1
 
 ;----------------------------------------------------------------------------
-; void print_level()
-;   Possible to use a character map here? Would need to figure out how
-;   to store the colors with the characters though.
+; int print_level()
+;   Returns the number of dots remaining in the level.
 ;----------------------------------------------------------------------------
 print_level:
   mov r8, 1                                   ; x = 1
@@ -143,8 +142,6 @@ print_level:
   jmp .loop_start                             ; repeat
 .loop_end:
   mov rax, [num_dots]
-  cmp rax, 0                                  ; if num_dots == 0
-  jle end_game                                ;   goto end_game
   ret                                         ; else return
 
 ;----------------------------------------------------------------------------

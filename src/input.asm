@@ -2,6 +2,14 @@ BITS 64
 
 %include "macros.asm"
 
+KEY_ENTER equ 1
+KEY_UP equ 2
+KEY_DOWN equ 3
+KEY_LEFT equ 4
+KEY_RIGHT equ 5
+KEY_PAUSE equ 6
+KEY_QUIT equ 7
+
 extern STDIN
 extern player_move_up
 extern player_move_down
@@ -9,6 +17,14 @@ extern player_move_left
 extern player_move_right
 
 global handle_input
+global read_input
+global KEY_ENTER
+global KEY_UP
+global KEY_DOWN
+global KEY_LEFT
+global KEY_RIGHT
+global KEY_PAUSE
+global KEY_QUIT
 
 %macro get_char 0
   mov byte [input], 0
@@ -91,4 +107,63 @@ handle_input:
 
 .done:
   mov qword rax, 0
+  ret
+
+;----------------------------------------------------------------------------
+; int read_input()
+; Reads input and returns the key code.
+;----------------------------------------------------------------------------
+read_input:
+  xor rax, rax                               ; Clear rax
+  get_char                                   ; Read char byte (goes into rdx)
+
+.check_enter:
+  cmp rdx, 13                                ; Check if ENTER
+  jne .check_quit                            ; If not, goto .check_arrow
+  mov qword rax, KEY_ENTER                   ; Set rax to KEY_ENTER
+  jmp .return                                ; Goto .return
+
+.check_quit:
+  cmp rdx, 'q'                               ; Check if 'q'
+  jne .check_pause                           ; If not, goto .check_pause
+  mov qword rax, KEY_QUIT                    ; Set rax to KEY_QUIT
+  jmp .return                                  ; Goto .return
+
+.check_pause:
+  cmp rdx, 'p'                               ; Check if 'p'
+  jne .check_arrow                           ; If not, goto .check_arrow
+  mov qword rax, KEY_PAUSE                   ; Set rax to KEY_PAUSE
+  jmp .return                                ; Goto .return
+
+.check_arrow:
+  cmp rdx, 27                                ; Check if ESC
+  jne .return                                ; If not, return
+  get_char                                   ; Read char byte
+  cmp rdx, 0                                 ; Check if 0
+  je .return                                 ; If yes, return. It's the ESC key
+  cmp rdx, '['                               ; Else, check if '['
+  jne .return                                ; If not, return
+.get_arrow_char:
+  get_char                                   ; Read char byte
+  cmp rdx, 'A'                               ; Check if 'A'
+  jne .check_down                            ; If not, goto .check_down
+  mov qword rax, KEY_UP                      ; Set rax to KEY_UP
+  jmp .return                                ; Goto .return
+.check_down:
+  cmp rdx, 'B'                               ; Check if 'B'
+  jne .check_left                            ; If not, goto .check_left
+  mov qword rax, KEY_DOWN                    ; Set rax to KEY_DOWN
+  jmp .return                                ; Goto .return
+.check_left:
+  cmp rdx, 'D'                               ; Check if 'D'
+  jne .check_right                           ; If not, goto .check_right
+  mov qword rax, KEY_LEFT                    ; Set rax to KEY_LEFT
+  jmp .return                                ; Goto .return
+.check_right:
+  cmp rdx, 'C'                               ; Check if 'C'
+  jne .return                                ; If not, goto .return
+  mov qword rax, KEY_RIGHT                   ; Set rax to KEY_RIGHT
+  jmp .return                                ; Goto .return
+
+.return:
   ret

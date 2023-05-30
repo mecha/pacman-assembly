@@ -12,6 +12,7 @@ extern num_to_str
 extern color_reset
 extern color_yellow
 
+global reset_player
 global print_player
 global print_score
 global update_player
@@ -48,6 +49,18 @@ score_txt_len equ $ - score_txt
 
 
 SECTION .text
+;----------------------------------------------------------------------------
+; void reset_player()
+;----------------------------------------------------------------------------
+reset_player:
+  mov qword [px], 21
+  mov qword [py], 23
+  mov qword [vx], 0
+  mov qword [vy], 0
+  mov qword [tx], 0
+  mov qword [ty], 0
+  ret
+
 ;----------------------------------------------------------------------------
 ; void print_player()
 ;----------------------------------------------------------------------------
