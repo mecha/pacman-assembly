@@ -8,10 +8,11 @@ I'd also like to apologize to the assembly warriors for my (probably) terrible a
 
 ## Todo
 
+- [x] Win condition
+- [x] Main menu
 - [ ] Enemies
 - [ ] Lives
 - [ ] Lose condition
-- [x] Win condition
 - [ ] Powerup & eat enemies
 - [ ] Fruit 🍒
 - [ ] Sounds, question mark?
