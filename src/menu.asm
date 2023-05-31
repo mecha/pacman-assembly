@@ -13,7 +13,7 @@ extern KEY_DOWN
 extern clr_scr
 extern goto_pos
 extern play_game
-extern end_game
+extern quit
 extern read_input
 
 global do_menu
@@ -125,6 +125,6 @@ menu_enter:
   cmp rax, 0
   je play_game
   cmp rax, 1
-  jmp end_game
+  jmp quit
 .return:
   ret

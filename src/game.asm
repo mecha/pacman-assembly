@@ -21,7 +21,7 @@ extern goto_pos
 
 global pacman
 global play_game
-global end_game
+global quit
 global print_help
 
 SECTION .rodata
@@ -45,9 +45,7 @@ pacman:
   call clr_scr
   call do_menu
 .end:
-  call show_cursor
-  call nrm_buf
-  jmp end_game
+  jmp quit
 
 ;----------------------------------------------------------------------------
 ; void play_game()
@@ -60,10 +58,9 @@ play_game:
 .input:
   call handle_input
   cmp rax, 1
-  je end_game
+  je .return
 .draw:
   call clr_scr
-  je end_game
   call print_help
   call print_score
   call print_level
@@ -82,9 +79,9 @@ play_game:
   ret
 
 ;----------------------------------------------------------------------------
-; void end_game()
+; void quit()
 ;----------------------------------------------------------------------------
-end_game:
+quit:
   call clr_scr
   call show_cursor
   call nrm_buf
