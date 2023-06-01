@@ -2,6 +2,7 @@ BITS 64
 
 global sleep
 global usleep
+global time
 global num_to_str
 
 
@@ -41,6 +42,16 @@ usleep:
   mov rdi, sleep_struct           ;   &sleep_struct,
   xor rsi, rsi                    ;   NULL,
   syscall                         ; )
+  ret
+
+;----------------------------------------------------------------------------
+; u64 time()
+;  Gets the system time in seconds since the Unix epoch.
+;----------------------------------------------------------------------------
+time:
+  mov rax, 201                     ; sys_time(
+  xor rdi, rdi                     ;   NULL
+  syscall                          ; )
   ret
 
 ;----------------------------------------------------------------------------
