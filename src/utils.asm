@@ -2,7 +2,6 @@ BITS 64
 
 global sleep
 global usleep
-global print_num
 global num_to_str
 
 
@@ -42,17 +41,6 @@ usleep:
   mov rdi, sleep_struct           ;   &sleep_struct,
   xor rsi, rsi                    ;   NULL,
   syscall                         ; )
-  ret
-
-;----------------------------------------------------------------------------
-; void print_num(u64 num)
-;  Prints a number to stdout.
-;----------------------------------------------------------------------------
-print_num:
-  mov rax, [rsp + 8]
-  mov rdx, rax
-  and rcx, 0xFFFFFFFFFFFFFFF0
-  cmp rcx, 1
   ret
 
 ;----------------------------------------------------------------------------

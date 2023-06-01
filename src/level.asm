@@ -7,7 +7,6 @@ extern STDOUT
 extern STDERR
 extern goto_pos
 extern sleep
-extern print_num
 extern color_reset
 extern color_yellow
 extern color_blue
