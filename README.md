@@ -54,22 +54,22 @@ The file should contain a 44x31 character grid. You can probably decipher what t
 
 | Character | Tile            |
 | --------- | --------------- |
-| a         | ╔ <wall>        |
-| b         | ╗ <wall>        |
-| c         | ╚ <wall>        |
-| d         | ╝ <wall>        |
-| e         | ║ <wall>        |
-| f         | ═ <wall>        |
-| g         | ┌ <wall>        |
-| h         | ┐ <wall>        |
-| i         | └ <wall>        |
-| j         | ┘ <wall>        |
-| k         | │ <wall>        |
-| l         | ─ <wall>        |
-| m         | <out of bounds> |
-| .         | ⋅ <dot>         |
-| ,         | ● <power up>    |
-| z         | ● <end>         |
+| a         | ╔ [wall]        |
+| b         | ╗ [wall]        |
+| c         | ╚ [wall]        |
+| d         | ╝ [wall]        |
+| e         | ║ [wall]        |
+| f         | ═ [wall]        |
+| g         | ┌ [wall]        |
+| h         | ┐ [wall]        |
+| i         | └ [wall]        |
+| j         | ┘ [wall]        |
+| k         | │ [wall]        |
+| l         | ─ [wall]        |
+| m         | [out of bounds] |
+| .         | ⋅ [pellet]      |
+| ,         | ● [power up]    |
+| z         | [end]           |
 
 It's important to include a `z` at the end. This is required because I was lazy. Just include it, alright?
 
