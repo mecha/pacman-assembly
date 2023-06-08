@@ -15,9 +15,13 @@ extern print_level
 extern reset_player
 extern print_player
 extern print_score
+extern print_enemies
 extern update_player
+extern did_any_ghost_hit_player
+extern update_enemies
 extern usleep
 extern goto_pos
+extern srand
 
 global pacman
 global play_game
@@ -40,6 +44,7 @@ SECTION .text
 ; void pacman()
 ;----------------------------------------------------------------------------
 pacman:
+  call srand
   call alt_buf
   call hide_cursor
   call clr_scr
@@ -67,8 +72,13 @@ play_game:
   cmp rax, 0
   je .return
   call print_player
+  call print_enemies
+  call did_any_ghost_hit_player
+  cmp rax, 1
+  je .return
 .update:
   call update_player
+  call update_enemies
 .delay:
   push qword [ftime]
   call usleep

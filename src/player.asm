@@ -21,6 +21,7 @@ global player_move_up
 global player_move_down
 global player_move_left
 global player_move_right
+global is_player_at
 global score
 
 
@@ -268,4 +269,24 @@ player_move_left:
 player_move_right:
   mov qword [tx], 1
   mov qword [ty], 0
+  ret
+
+;----------------------------------------------------------------------------
+; bool is_player_at(u64 x, u64 y)
+;   Checks if the player is at specific coords.
+;----------------------------------------------------------------------------
+is_player_at:
+  mov r8, [rsp + 8]
+  mov r9, [rsp + 16]
+  mov rax, [px]
+  cmp rax, r8
+  jne .ret_false
+  mov rax, [py]
+  cmp rax, r9
+  jne .ret_false
+.ret_true:
+  mov qword rax, 1
+  ret
+.ret_false:
+  mov qword rax, 0
   ret

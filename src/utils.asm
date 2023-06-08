@@ -8,6 +8,9 @@ global num_to_str
 
 SECTION .data
 
+  rseed dq 0
+  rseq  dq 0
+
 sleep_struct:
   tv_sec  dq 0
   tv_usec dq 0
@@ -52,6 +55,32 @@ time:
   mov rax, 201                     ; sys_time(
   xor rdi, rdi                     ;   NULL
   syscall                          ; )
+  ret
+
+;----------------------------------------------------------------------------
+; void srand()
+;  Seeds the random number generator.
+;----------------------------------------------------------------------------
+srand:
+  call time                        ; rax = time()
+  or rax, 1                        ; rax |= 1 (make sure it's odd)
+  mov [rseed], rax                 ; rseed = rax
+  ret
+
+;----------------------------------------------------------------------------
+; u64 rand()
+;  Gets a random number.
+;----------------------------------------------------------------------------
+rand:
+  mov qword rbx, [rseed]           ; rbx = rseed
+  mov qword rcx, [rseq]            ; rcx = rseq
+  call time                        ; rax = time()
+  mul rax                          ; rax *= rax
+  add rcx, rbx                     ; rcx += rbx
+  add rax, rcx                     ; rax += rcx
+  mov al, ah                       ; al = ah
+  mov ah, dl                       ; ah = dl
+  mov [rseq], rcx                  ; rseq = rcx
   ret
 
 ;----------------------------------------------------------------------------
