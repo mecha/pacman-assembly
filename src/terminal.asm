@@ -44,6 +44,7 @@ C_RESET  db 27, '[0m'       ; Normal color ANSI escape code
 C_YELLOW db 27, '[33m'      ; Yellow color ANSI escape code
 C_BLUE   db 27, '[34m'      ; Blue color ANSI escape code
 
+
 SECTION .text
 ;----------------------------------------------------------------------------
 ; void clr_scr()

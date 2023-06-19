@@ -7,6 +7,8 @@ extern goto_pos
 extern rand
 extern lvl_is_wall
 extern is_player_at
+extern color_reset
+
 
 global print_enemies
 global update_enemies
@@ -23,18 +25,11 @@ SPAWN_RATE equ 20
 
 SECTION .rodata
 
-  sprite_idle db "😴"
-  sprite_idle_len equ $-sprite_idle
-
-  ; sprite_active db "👻"
-  sprite_active db "M"
-  sprite_active_len equ $-sprite_active
+  sprite_normal db 27, "[91m☢"
+  sprite_normal_len equ $-sprite_normal
 
   sprite_recall db "👀"
   sprite_recall_len equ $-sprite_recall
-
-  sprite_spawning db "🌞"
-  sprite_spawning_len equ $-sprite_spawning
 
 
 SECTION .data
@@ -45,24 +40,28 @@ blinky:
   u1 dq 0
   v1 dq 0
   s1 dq S_IDLE
+  g1 db 27, "[91m☢"
 pinky:
   x2 dq 19
   y2 dq 14
   u2 dq 0
   v2 dq 0
   s2 dq S_IDLE
+  g2 db 27, "[95m☢"
 inky:
   x3 dq 22
   y3 dq 14
   u3 dq 0
   v3 dq 0
   s3 dq S_IDLE
+  g3 db 27, "[96m☢"
 clyde:
   x4 dq 25
   y4 dq 14
   u4 dq 0
   v4 dq 0
   s4 dq S_IDLE
+  g4 db 27, "[93m☢"
 
 
 SECTION .text
@@ -90,37 +89,28 @@ print_enemies:
   ret
 
 ;----------------------------------------------------------------------------
-; void print_enemy()
+; void print_enemy(enemy*)
 ;   Prints a single enemy.
 ;----------------------------------------------------------------------------
 print_enemy:
-  mov rbx, [rsp + 8]
-  mov r8, [rbx]
-  inc r8
-  mov r9, [rbx + 8]
-  add r9, $2
-  push rbx
-  screen_pos r8, r9
-  pop rbx
-  mov r8, [rbx + 32]
-  cmp r8, S_IDLE
-  je .print_idle
-  cmp r8, S_RECALL
-  je .print_recall
-  cmp r8, S_SPAWNING
-  je .print_spawning
-  jmp .print_normal
-.print_idle:
-  print STDOUT, sprite_idle, sprite_idle_len
+  mov rbx, [rsp + 8]                  ; rbx = &enemy
+  mov r8, [rbx]                       ; r8 = enemy.x
+  inc r8                              ; r8 = r8 + 1
+  mov r9, [rbx + 8]                   ; r9 = enemy.y
+  add r9, $2                          ; r9 = r9 + 2
+  push rbx                            ; save rbx
+  screen_pos r8, r9                   ; goto_pos(r8, r9)
+  pop rbx                             ; restore rbx
+  mov r8, [rbx + 32]                  ; r8 = enemy.state
+  cmp r8, S_RECALL                    ; if r8 = S_RECALL
+  je .print_recall                    ;   goto .print_recall
+.print_normal:                        ; else
+  lea r8, [rbx + 40]                  ;   r8 = enemy.graphic
+  print STDOUT, r8, sprite_normal_len ;   print r8
+  call color_reset                    ; color_reset()
   ret
 .print_recall:
   print STDOUT, sprite_recall, sprite_recall_len
-  ret
-.print_spawning:
-  print STDOUT, sprite_spawning, sprite_spawning_len
-  ret
-.print_normal:
-  print STDOUT, sprite_active, sprite_active_len
   ret
 
 ;----------------------------------------------------------------------------
