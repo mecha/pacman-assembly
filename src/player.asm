@@ -52,6 +52,8 @@ SECTION .rodata
 sprites db 'Cc'                    ; sprite sheet
 score_txt db "Score: ", 0          ; Score text
 score_txt_len equ $ - score_txt
+lives_txt db "Lives:", 0
+lives_txt_len equ $ - lives_txt
 
 
 SECTION .text
@@ -116,11 +118,16 @@ print_score:
 ; void print_lives()
 ;----------------------------------------------------------------------------
 print_lives:
+.text:
+  screen_pos LIVES_X, 1
+  print STDOUT, lives_txt, lives_txt_len
+.icons:
   call color_yellow
   mov qword rax, [lives]                    ; num of lives left to print
   dec rax                                   ; draw 1 less life (one is playing)
   mov rdx, LIVES_X                          ; x-coord to print at
-.loop:
+  add rdx, lives_txt_len
+.icons_loop:
   cmp rax, 0                                ; if zero lives left
   jle .done                                 ;   goto .done
   push rax                                  ; save rax
@@ -131,7 +138,7 @@ print_lives:
   pop rax                                   ; restore rdx
   dec rax                                   ; decrement num lives
   add rdx, 2                                ; increment x-coord
-  jmp .loop
+  jmp .icons_loop
 .done:
   call color_reset
   ret
