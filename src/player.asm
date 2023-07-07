@@ -25,6 +25,8 @@ global player_move_right
 global is_player_at
 global score
 
+LIVES_X equ 20
+
 
 SECTION .data
 
@@ -117,7 +119,7 @@ print_lives:
   call color_yellow
   mov rax, [lives]                          ; num of lives left to print
   dec rax                                   ; draw 1 less life (one is playing)
-  mov rdx, 20                               ; x-coord to print at
+  mov rdx, LIVES_X                          ; x-coord to print at
 .loop:
   cmp rax, 0                                ; if zero lives left
   jle .done                                 ;   goto .done
