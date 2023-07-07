@@ -10,6 +10,9 @@ KEY_RIGHT equ 5
 KEY_PAUSE equ 6
 KEY_QUIT equ 7
 
+PAUSED_MSG_X equ 39
+PAUSED_MSG_Y equ 1
+
 extern STDIN
 extern STDOUT
 extern player_move_up
@@ -104,13 +107,13 @@ handle_input:
 .check_pause:
   cmp rdx, 'p'
   jne .done
-  screen_pos 38, 1
+  screen_pos PAUSED_MSG_X, PAUSED_MSG_Y
   print STDOUT, paused_str, paused_str_len
 .pause_loop:
   get_char
   cmp rdx, 'p'
   jne .pause_loop
-  screen_pos 38, 1
+  screen_pos PAUSED_MSG_X, PAUSED_MSG_Y
   print STDOUT, paused_clr, paused_str_len
   jmp .done
 
