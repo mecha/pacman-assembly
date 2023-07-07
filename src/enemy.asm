@@ -10,6 +10,7 @@ extern is_player_at
 extern color_reset
 
 
+global reset_enemies
 global print_enemies
 global update_enemies
 global did_any_ghost_hit_player
@@ -65,6 +66,39 @@ clyde:
 
 
 SECTION .text
+;----------------------------------------------------------------------------
+; void reset_enemies()
+;   Prints all enemies.
+;----------------------------------------------------------------------------
+reset_enemies:
+.blinky:
+  mov qword [x1], 16
+  mov qword [x1], 16
+  mov qword [y1], 14
+  mov qword [u1], 0
+  mov qword [v1], 0
+  mov qword [s1], S_IDLE
+.pinky:
+  mov qword [x2], 19
+  mov qword [y2], 14
+  mov qword [u2], 0
+  mov qword [v2], 0
+  mov qword [s2], S_IDLE
+.inky:
+  mov qword [x3], 22
+  mov qword [y3], 14
+  mov qword [u3], 0
+  mov qword [v3], 0
+  mov qword [s3], S_IDLE
+.clyde:
+  mov qword [x4], 25
+  mov qword [y4], 14
+  mov qword [u4], 0
+  mov qword [v4], 0
+  mov qword [s4], S_IDLE
+.done:
+  ret
+
 ;----------------------------------------------------------------------------
 ; void print_enemies()
 ;   Prints all enemies.
