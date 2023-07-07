@@ -117,7 +117,7 @@ print_score:
 ;----------------------------------------------------------------------------
 print_lives:
   call color_yellow
-  mov rax, [lives]                          ; num of lives left to print
+  mov qword rax, [lives]                    ; num of lives left to print
   dec rax                                   ; draw 1 less life (one is playing)
   mov rdx, LIVES_X                          ; x-coord to print at
 .loop:
