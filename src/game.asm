@@ -14,6 +14,7 @@ extern do_menu
 extern print_level
 extern reset_player
 extern print_player
+extern print_lives
 extern print_score
 extern print_enemies
 extern update_player
@@ -67,6 +68,7 @@ play_game:
 .draw:
   call print_help
   call print_score
+  call print_lives
   call print_level
   cmp rax, 0
   je .return

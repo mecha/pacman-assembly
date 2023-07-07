@@ -15,6 +15,7 @@ extern color_yellow
 global reset_player
 global print_player
 global print_score
+global print_lives
 global update_player
 global update_score
 global player_move_up
@@ -33,6 +34,8 @@ vx dq 0                            ; velocity x
 vy dq 0                            ; velocity y
 tx dq 0                            ; temp velocity x
 ty dq 0                            ; temp velocity y
+
+lives dq 3
 
 score dq 0                         ; current score
 score_str db "00000000"            ; current score as string
@@ -105,6 +108,30 @@ print_score:
 .print_score_str:
   screen_pos 8, 1                          ; move cursor to (score_txt_len, 1)
   print STDOUT, score_str, score_str_len   ; print score_str
+  ret
+
+;----------------------------------------------------------------------------
+; void print_lives()
+;----------------------------------------------------------------------------
+print_lives:
+  call color_yellow
+  mov rax, [lives]                          ; num of lives left to print
+  dec rax                                   ; draw 1 less life (one is playing)
+  mov rdx, 20                               ; x-coord to print at
+.loop:
+  cmp rax, 0                                ; if zero lives left
+  jle .done                                 ;   goto .done
+  push rax                                  ; save rax
+  push rdx                                  ; save rdx
+  screen_pos rdx, 1                         ; move to (rdx,1)
+  print STDOUT, sprites, 1                  ; print sprite for 1 life
+  pop rdx                                   ; restore rax
+  pop rax                                   ; restore rdx
+  dec rax                                   ; decrement num lives
+  inc rdx                                   ; increment x-coord
+  jmp .loop
+.done:
+  call color_reset
   ret
 
 ;----------------------------------------------------------------------------
@@ -289,4 +316,14 @@ is_player_at:
   ret
 .ret_false:
   mov qword rax, 0
+  ret
+
+;----------------------------------------------------------------------------
+; void lose_life()
+;   Remove a life from the player and reset position.
+;----------------------------------------------------------------------------
+lose_life:
+  mov rax, lives
+  dec rax
+  mov qword [lives], rax
   ret
