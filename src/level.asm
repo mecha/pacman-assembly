@@ -94,13 +94,11 @@ print_level:
   je .print_dot                               ;   goto .print_dot
   cmp al, ','                                 ; if al == ','
   je .print_power                             ;   goto .print_power
-  cmp al, 'z'                                 ; if al == 'z'
-  je .loop_end                                ;   goto .print_end
   cmp al, 'm'                                 ; if al >= 'm'
   jge .print_other                            ;   goto .print_other
   cmp al, 'a'                                 ; if al >= 'a'
   jge .print_wall                             ;   goto .print_wall
-  jmp .loop_continue                          ; else goto .loop_continue
+  jmp .print_other                            ; else goto .print_other
 .print_nl:
   inc r9                                      ; y++
   xor r8, r8                                  ; x = 0

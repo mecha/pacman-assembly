@@ -65,7 +65,6 @@ play_game:
   cmp rax, 1
   je .return
 .draw:
-  call clr_scr
   call print_help
   call print_score
   call print_level
