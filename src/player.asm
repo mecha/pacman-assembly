@@ -11,8 +11,12 @@ extern lvl_consume
 extern num_to_str
 extern color_reset
 extern color_yellow
+extern reset_enemies
+extern sleep
 
 global reset_player
+global reset_lives
+global reset_score
 global print_player
 global print_score
 global print_lives
@@ -23,6 +27,7 @@ global player_move_down
 global player_move_left
 global player_move_right
 global is_player_at
+global player_lose_life
 global score
 
 LIVES_X equ 20
@@ -54,6 +59,7 @@ score_txt db "Score: ", 0          ; Score text
 score_txt_len equ $ - score_txt
 lives_txt db "Lives:", 0
 lives_txt_len equ $ - lives_txt
+space db ' '
 
 
 SECTION .text
@@ -67,6 +73,20 @@ reset_player:
   mov qword [vy], 0
   mov qword [tx], 0
   mov qword [ty], 0
+  ret
+
+;----------------------------------------------------------------------------
+; void reset_lives()
+;----------------------------------------------------------------------------
+reset_lives:
+  mov qword [lives], 3
+  ret
+
+;----------------------------------------------------------------------------
+; void reset_score()
+;----------------------------------------------------------------------------
+reset_score:
+  mov qword [score], 0
   ret
 
 ;----------------------------------------------------------------------------
@@ -140,6 +160,8 @@ print_lives:
   add rdx, 2                                ; increment x-coord
   jmp .icons_loop
 .done:
+  screen_pos rdx, 1                         ; move to (rdx,1)
+  print STDOUT, space, 1                    ; print space to mask prev life
   call color_reset
   ret
 
@@ -328,11 +350,26 @@ is_player_at:
   ret
 
 ;----------------------------------------------------------------------------
-; void lose_life()
-;   Remove a life from the player and reset position.
+; bool player_lose_life()
+;   Lose a life, reset positions, and return whether playes has lives left.
 ;----------------------------------------------------------------------------
-lose_life:
-  mov rax, lives
+player_lose_life:
+.wait:
+  push 2
+  call sleep
+  add rsp, 8
+.dec_lives:
+  mov qword rax, [lives]
   dec rax
   mov qword [lives], rax
+  cmp rax, 0
+  jle .ret_game_over
+.reset:
+  call reset_player
+  call reset_enemies
+.ret_has_lives:
+  mov rax, 1
+  ret
+.ret_game_over:
+  mov rax, 0
   ret

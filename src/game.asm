@@ -13,11 +13,15 @@ extern handle_input
 extern do_menu
 extern print_level
 extern reset_player
+extern reset_lives
+extern reset_score
 extern print_player
 extern print_lives
 extern print_score
+extern reset_enemies
 extern print_enemies
 extern update_player
+extern player_lose_life
 extern did_any_ghost_hit_player
 extern update_enemies
 extern usleep
@@ -37,7 +41,6 @@ help_txt_len equ $ - help_txt
 SECTION .data
 
 ftime dq 100
-score dq 0
 fcount dq 10
 
 SECTION .text
@@ -60,6 +63,9 @@ play_game:
   call clr_scr
   call load_level
   call reset_player
+  call reset_lives
+  call reset_score
+  call reset_enemies
 .loop:
 .input:
   call handle_input
@@ -76,7 +82,7 @@ play_game:
   call print_enemies
   call did_any_ghost_hit_player
   cmp rax, 1
-  je .return
+  je .lose_life
 .update:
   call update_player
   call update_enemies
@@ -87,6 +93,11 @@ play_game:
 .repeat:
   jmp .loop
 .return:
+  ret
+.lose_life:
+  call player_lose_life
+  cmp rax, 0
+  jne .loop
   ret
 
 ;----------------------------------------------------------------------------
