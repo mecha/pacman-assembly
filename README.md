@@ -19,13 +19,11 @@ I'd also like to apologize to the assembly warriors for my (probably) terrible a
 
 # Usage
 
-Build with `make`:
+Build the `pacman` binary with `make`:
 
 ```
 make
 ```
-
-This will build the binary in `.build/main`.
 
 Alternatively, you can build and run in a single command:
 
