@@ -31,7 +31,7 @@ global print_help
 
 SECTION .rodata
 
-help_txt db "Controls:", 10, " * Move: Up/Down/Left/Right", 10, " * Pause: p", 10, " * Exit: q"
+help_txt db "Controls:", 10, " • Move: Up/Down/Left/Right", 10, " • Pause: p", 10, " • Exit: q"
 help_txt_len equ $ - help_txt
 
 SECTION .data
