@@ -32,6 +32,11 @@ $(BUILD_DIR)/%.c.o: %.c
 run: $(TARGET)
 	@$(TARGET) || echo -e "\033[0;31m[MAKE] Exited with code $$?\033[0m"
 
+# Build and debug target
+.PHONY: debug
+debug: $(TARGET)
+	@gdb $(TARGET)
+
 # Delete build files and target
 .PHONY: clean
 clean:
