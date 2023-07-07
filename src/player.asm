@@ -128,7 +128,7 @@ print_lives:
   pop rdx                                   ; restore rax
   pop rax                                   ; restore rdx
   dec rax                                   ; decrement num lives
-  inc rdx                                   ; increment x-coord
+  add rdx, 2                                ; increment x-coord
   jmp .loop
 .done:
   call color_reset
