@@ -11,10 +11,12 @@ KEY_PAUSE equ 6
 KEY_QUIT equ 7
 
 extern STDIN
+extern STDOUT
 extern player_move_up
 extern player_move_down
 extern player_move_left
 extern player_move_right
+extern goto_pos
 
 global handle_input
 global read_input
@@ -32,6 +34,13 @@ global KEY_QUIT
   xor rdx, rdx
   mov rdx, [input]
 %endmacro
+
+
+SECTION .rodata
+
+paused_clr db "      "
+paused_str db "PAUSED"
+paused_str_len equ $-paused_str
 
 
 SECTION .data
@@ -95,10 +104,14 @@ handle_input:
 .check_pause:
   cmp rdx, 'p'
   jne .done
+  screen_pos 38, 1
+  print STDOUT, paused_str, paused_str_len
 .pause_loop:
   get_char
   cmp rdx, 'p'
   jne .pause_loop
+  screen_pos 38, 1
+  print STDOUT, paused_clr, paused_str_len
   jmp .done
 
 .exit:
