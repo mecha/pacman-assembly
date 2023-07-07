@@ -12,6 +12,8 @@ extern KEY_UP
 extern KEY_DOWN
 extern clr_scr
 extern goto_pos
+extern color_blue
+extern color_reset
 extern play_game
 extern quit
 extern read_input
@@ -39,11 +41,8 @@ logo_3 db  "  ║ ██████  ███████ ██      ██ �
 logo_4 db  "  ║ ██      ██   ██ ██      ██  ██  ██ ██   ██ ██  ██ ██ ║", 10
 logo_5 db  "  ║ ██      ██   ██  ██████ ██      ██ ██   ██ ██   ████ ║", 10
 logo_7 db  "  ╚══════════════════════════════════════════════════════╝", 10
+logo_8 db  27, "[90m  Miguel Muscat [https://github.com/mecha/pacman-assembly]", 27, "[0m", 10
 logo_len equ $-logo
-
-credits db "    By Miguel Muscat - github.com/mecha", 10
-credits_len equ $-credits
-
 
 SECTION .data
 
@@ -58,6 +57,7 @@ do_menu:
 .loop:
   call clr_scr
 .logo:
+  call color_blue
   screen_pos 1, 2
   print STDOUT, logo, logo_len
 .menu:
@@ -65,9 +65,7 @@ do_menu:
   print STDOUT, play_str, play_str_len
   screen_pos MENU_X, MENU_Y + 1
   print STDOUT, quit_str, quit_str_len
-.credits:
-  screen_pos 1, MENU_Y + NUM_MENU_ITEMS + 2
-  print STDOUT, credits, credits_len
+  call color_reset
 .highlight:
   mov qword rbx, 11
   add rbx, [sel_n]
